@@ -5490,6 +5490,12 @@ server {
         limit_req zone=xrayebator_sub burst=10 nodelay;
         add_header Cache-Control "no-store" always;
         add_header X-Robots-Tag "noindex, nofollow, nosnippet" always;
+        # HAPP routing-профиль уезжает клиенту в заголовке ответа и легко
+        # перерастает дефолтные 4k: nginx тогда отвечает 502 и пишет в лог
+        # "upstream sent too big header".
+        proxy_buffer_size 32k;
+        proxy_buffers 8 32k;
+        proxy_busy_buffers_size 64k;
         proxy_pass http://127.0.0.1:8080;
         proxy_http_version 1.1;
         proxy_set_header Host \$host;
@@ -5718,6 +5724,12 @@ server {
         limit_req zone=xrayebator_sub burst=10 nodelay;
         add_header Cache-Control "no-store" always;
         add_header X-Robots-Tag "noindex, nofollow, nosnippet" always;
+        # HAPP routing-профиль уезжает клиенту в заголовке ответа и легко
+        # перерастает дефолтные 4k: nginx тогда отвечает 502 и пишет в лог
+        # "upstream sent too big header".
+        proxy_buffer_size 32k;
+        proxy_buffers 8 32k;
+        proxy_busy_buffers_size 64k;
         proxy_pass http://127.0.0.1:8080;
         proxy_http_version 1.1;
         proxy_set_header Host \$host;

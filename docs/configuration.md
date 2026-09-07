@@ -129,6 +129,11 @@ sends a request; the client still tunnels it, so the destination sees the VPS ad
 without a cascade the catch-all outbound is already `direct`, so bypass cannot change what a Russian
 site sees. Keeping domestic traffic out of the tunnel is only possible in the client profile.
 
+The profile travels to the client in a response header, so a large `DirectSites` list can outgrow
+nginx's default 4k proxy buffer. The generated `location /sub/` raises it; if you run your own
+reverse proxy in front of the subscription, set `proxy_buffer_size` there too, otherwise nginx
+answers 502 and logs `upstream sent too big header`.
+
 ### Generating it from the menu
 
 `HAPP subscription -> 7) Маршрутизация клиента` writes a ready split profile built from the same
