@@ -129,6 +129,14 @@ sends a request; the client still tunnels it, so the destination sees the VPS ad
 without a cascade the catch-all outbound is already `direct`, so bypass cannot change what a Russian
 site sees. Keeping domestic traffic out of the tunnel is only possible in the client profile.
 
+### Generating it from the menu
+
+`HAPP subscription -> 7) Маршрутизация клиента` writes a ready split profile built from the same
+bundles the server-side bypass uses. It keeps `GlobalProxy: "true"`, so anything unknown still
+tunnels, and moves the Russian bundles plus `geoip:ru` into `DirectSites` and `DirectIp`. The
+previous override is backed up next to the file, and removing the override restores the managed
+default.
+
 ### Override file
 
 | Variable | Default | Meaning |
