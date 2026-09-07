@@ -182,7 +182,28 @@ Three things are easy to get wrong:
   it already stored.
 - **Geo databases must be reachable by the client.** The managed default points at
   `/sub/<token>/geoip.dat`, which is per-subscriber. An operator-wide override cannot embed one
-  subscriber's token, so host the databases somewhere every client can fetch them.
+  subscriber's token, so either host the databases somewhere every client can fetch them, or use
+  the placeholders below.
+
+### Placeholders
+
+The override is read per request, so three values can be left for the server to fill in:
+
+| Placeholder | Replaced with |
+|---|---|
+| `{{GEOIP_URL}}` | `<base url>/sub/<token>/geoip.dat` for the requesting subscriber |
+| `{{GEOSITE_URL}}` | `<base url>/sub/<token>/geosite.dat` for the requesting subscriber |
+| `{{LAST_UPDATED}}` | newest mtime among `xrayebator` and the two geo databases |
+
+```json
+  "Geoipurl": "{{GEOIP_URL}}",
+  "Geositeurl": "{{GEOSITE_URL}}",
+  "LastUpdated": "{{LAST_UPDATED}}",
+```
+
+Substitution runs before schema validation, so an unresolved placeholder fails the `https://` check
+and the managed default is served instead of a broken profile. `{{LAST_UPDATED}}` also removes the
+need to bump the value by hand after editing the geo databases.
 
 While a client downloads new geo databases the previous profile keeps running, so a failed download
 leaves routing unchanged rather than broken.
